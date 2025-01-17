@@ -35,8 +35,22 @@ function ExampleCard() {
   );
 }
 
+interface FrameProps {
+  title?: string;
+  tokenName?: string;
+  tokenSymbol?: string;
+  fundingGoal?: number;
+  currentFunding?: number;
+}
+
 export default function Frame(
-  { title }: { title?: string } = { title: PROJECT_TITLE }
+  { 
+    title = PROJECT_TITLE,
+    tokenName = "ONSEN",
+    tokenSymbol = "ONSEN",
+    fundingGoal = 100,
+    currentFunding = 0
+  }: FrameProps
 ) {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
   const [context, setContext] = useState<Context.FrameContext>();
@@ -137,7 +151,38 @@ export default function Frame(
     >
       <div className="w-[300px] mx-auto py-2 px-2">
         <h1 className="text-2xl font-bold text-center mb-4 text-neutral-900">{title}</h1>
-        <ExampleCard />
+        <Card className="border-neutral-200 bg-white">
+          <CardHeader>
+            <CardTitle className="text-neutral-900">Token Launch</CardTitle>
+            <CardDescription className="text-neutral-600">
+              {tokenName} ({tokenSymbol})
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="text-neutral-800">
+            <div className="space-y-4">
+              <div className="flex justify-between">
+                <span>Funding Goal:</span>
+                <span>{fundingGoal} WETH</span>
+              </div>
+              <div className="h-2 bg-neutral-200 rounded-full">
+                <div 
+                  className="h-full bg-purple-500 rounded-full" 
+                  style={{ width: `${(currentFunding / fundingGoal) * 100}%` }}
+                />
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Raised:</span>
+                <span>{currentFunding} WETH</span>
+              </div>
+              <PurpleButton 
+                onClick={() => sdk.actions.openUrl("https://www.onsen.lol")}
+                className="w-full"
+              >
+                Contribute WETH
+              </PurpleButton>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
